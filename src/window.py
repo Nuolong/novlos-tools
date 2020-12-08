@@ -14,6 +14,9 @@ window = tk.Tk()
 window.title('Novlos Tool')
 window.config(background = "#e6e6ff")
 
+# action vars
+action_var = tk.IntVar()
+
 # File explorer
 def chooseFile(i):
     filename = tk.filedialog.askopenfilename(initialdir = "~/Downloads",
@@ -24,6 +27,17 @@ def chooseFile(i):
     # change label to match selected file
     ent_file_explorer[i].configure(text = filename)
 
+
+# determine action
+def chooseAction():
+    if action_var.get() == 0:       # encrypt
+        print("0")
+    elif action_var.get() == 1:     # decrypt
+        print("1")
+    elif action_var.get() == 2:     # merge
+        print("2")
+    elif action_var.get() == 3:     # split
+        print("3")
 
 # create file inputs
 for i in range(FILE_COUNT):
@@ -43,31 +57,39 @@ for i in range(FILE_COUNT):
 btn_encrypt = tk.Radiobutton(window,
                              text = "Encrypt",
                              padx = 10,
-                             pady = 5)
+                             pady = 5,
+                             variable = action_var,
+                             value = 0)
 btn_encrypt.grid(column = 0, row = FILE_COUNT)
 
 btn_decrypt = tk.Radiobutton(window,
                              text = "Decrypt",
                              padx = 10,
-                             pady = 5)
+                             pady = 5,
+                             variable = action_var,
+                             value = 1)
 btn_decrypt.grid(column = 1, row = FILE_COUNT)
 
 btn_merge = tk.Radiobutton(window,
                              text = "Merge",
                              padx = 10,
-                             pady = 5)
+                             pady = 5,
+                             variable = action_var,
+                             value = 2)
 btn_merge.grid(column = 2, row = FILE_COUNT)
 
 btn_split = tk.Radiobutton(window,
                              text = "Split",
                              padx = 10,
-                             pady = 5)
+                             pady = 5,
+                             variable = action_var,
+                             value = 3)
 btn_split.grid(column = 3, row = FILE_COUNT)
 
 # execute button
 btn_execute = tk.Button(window,
                         text = "Execute",
-                        command = chooseFile_arg,
+                        command = chooseAction,
                         fg = "blue",
                         bg = "#add8e6")
 btn_execute.grid(column = 4, row = FILE_COUNT)
