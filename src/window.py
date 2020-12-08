@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 
+# imports
 import tkinter as tk
 from tkinter import filedialog
 from functools import partial
-#import pdftool.py
+import pdftool as pdf
 
+# globals / constant
 FILE_COUNT = 5
-file_paths = []
+file_paths = FILE_COUNT * [0]
 ent_file_explorer = []
+btn_actions = []
+actions = ["Encrypt", "Decrypt", "Merge", "Split"]
 
 # window settings
 window = tk.Tk()
 window.title('Novlos Tool')
 window.config(background = "#e6e6ff")
 
-# action vars
+# action variable
 action_var = tk.IntVar()
 
 # File explorer
@@ -54,37 +58,14 @@ for i in range(FILE_COUNT):
     btn_explore.grid(column = 4, row = i)
 
 # create action buttons
-btn_encrypt = tk.Radiobutton(window,
-                             text = "Encrypt",
-                             padx = 10,
-                             pady = 5,
-                             variable = action_var,
-                             value = 0)
-btn_encrypt.grid(column = 0, row = FILE_COUNT)
-
-btn_decrypt = tk.Radiobutton(window,
-                             text = "Decrypt",
-                             padx = 10,
-                             pady = 5,
-                             variable = action_var,
-                             value = 1)
-btn_decrypt.grid(column = 1, row = FILE_COUNT)
-
-btn_merge = tk.Radiobutton(window,
-                             text = "Merge",
-                             padx = 10,
-                             pady = 5,
-                             variable = action_var,
-                             value = 2)
-btn_merge.grid(column = 2, row = FILE_COUNT)
-
-btn_split = tk.Radiobutton(window,
-                             text = "Split",
-                             padx = 10,
-                             pady = 5,
-                             variable = action_var,
-                             value = 3)
-btn_split.grid(column = 3, row = FILE_COUNT)
+for i, action in enumerate(actions):
+    btn_actions.append(tk.Radiobutton(window,
+                                      text = action,
+                                      padx = 10,
+                                      pady = 5,
+                                      variable = action_var,
+                                      value = i))
+    btn_actions[i].grid(column = i, row = FILE_COUNT)
 
 # execute button
 btn_execute = tk.Button(window,
