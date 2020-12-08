@@ -37,12 +37,12 @@ def choose_file(i):
     ent_file_explorer[i].configure(text = filename)
 
 
-# determine action
+# determine action - currently working on prototypes
 def choose_action():
     if action_var.get() == 0:       # encrypt
         pdf.add_encryption(file_paths, "abc123", "test")
     elif action_var.get() == 1:     # decrypt
-        print("1")
+        pdf.rm_encryption(file_paths, "wrongpassword", "unlocked")
     elif action_var.get() == 2:     # merge
         print("2")
     elif action_var.get() == 3:     # split
