@@ -6,12 +6,16 @@ from tkinter import filedialog
 from functools import partial
 import pdftool as pdf
 
-# globals / constant
+# constants
 FILE_COUNT = 5
-file_paths = FILE_COUNT * [0]
+actions = ["Encrypt", "Decrypt", "Merge", "Slice"]
+
+# widget lists
 ent_file_explorer = []
 btn_actions = []
-actions = ["Encrypt", "Decrypt", "Merge", "Split"]
+
+# files
+file_paths = [0] * FILE_COUNT
 
 # window settings
 window = tk.Tk()
@@ -22,20 +26,21 @@ window.config(background = "#e6e6ff")
 action_var = tk.IntVar()
 
 # File explorer
-def chooseFile(i):
+def choose_file(i):
     filename = tk.filedialog.askopenfilename(initialdir = "~/Downloads",
                                              title = "Open Files",
                                              filetypes = (
                                              ("PDF files", "*.pdf"),
                                              ("All files", "*.*")))
     # change label to match selected file
+    file_paths[i] = filename
     ent_file_explorer[i].configure(text = filename)
 
 
 # determine action
-def chooseAction():
+def choose_action():
     if action_var.get() == 0:       # encrypt
-        print("0")
+        pdf.add_encryption(file_paths, "abc123", "test")
     elif action_var.get() == 1:     # decrypt
         print("1")
     elif action_var.get() == 2:     # merge
@@ -49,7 +54,7 @@ for i in range(FILE_COUNT):
                                  width = 70,
                                  fg = "blue"))
 
-    chooseFile_arg = partial(chooseFile, i)
+    chooseFile_arg = partial(choose_file, i)
     btn_explore = tk.Button(window,
                             text = "Select File",
                             command = chooseFile_arg)
@@ -70,7 +75,7 @@ for i, action in enumerate(actions):
 # execute button
 btn_execute = tk.Button(window,
                         text = "Execute",
-                        command = chooseAction,
+                        command = choose_action,
                         fg = "blue",
                         bg = "#add8e6")
 btn_execute.grid(column = 4, row = FILE_COUNT)
