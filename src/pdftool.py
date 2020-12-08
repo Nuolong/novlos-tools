@@ -4,35 +4,59 @@
 import sys
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
-# adds encryption to all PDFs in paths with passcode password
+# adds encryption to all PDFs in paths with passcode password & saves under new name
 def add_encryption(paths, password, new_name):
     pdf_writer = PdfFileWriter()
 
     for i, path in enumerate(paths):
-        if path == 0: # empty
+        # empty
+        if path == 0:
             continue
+
         pdf_reader = PdfFileReader(path)
 
+        # check if file is encrypted already
+        if pdf_reader.isEncrypted:
+            print(f"Error: File ({path}) is already encrypted.")
+            continue
+
+        # encrypt PDF
         for page in range(pdf_reader.getNumPages()):
             pdf_writer.addPage(pdf_reader.getPage(page))
 
         pdf_writer.encrypt(user_pwd=password, owner_pwd=None,
                            use_128bit=True)
 
+        # create new file
         with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
             pdf_writer.write(fh)
 
+# removes encryption from all PDFs in paths with password & saves undder new name
 def rm_encryption(paths, password, new_name):
     pdf_writer = PdfFileWriter()
-    pdf_reader = PdfFileReader(input_pdf)
 
-    if pdf_reader.isEncrypted:
+    for i, path in enumerate(paths):
+        # empty
+        if path == 0:
+            continue
+
+        pdf_reader = PdfFileReader(path)
+
+        if not pdf_reader.isEncrypted:
+            print(f"Error: File ({path}) is not encrypted.")
+            continue
+
+        # decrypt with password (has silent failure)
         pdf_reader.decrypt(password)
 
-        for page in range(pdf_reader.getNumPages()):
-            pdf_writer.addPage(pdf_reader.getPage(page))
+        try:
+            for page in range(pdf_reader.getNumPages()):
+                pdf_writer.addPage(pdf_reader.getPage(page))
+        except: # still encrypted - most likely incorrect password provided
+            print(f"Error: Entered password could not unlock: ({path})")
 
-        with open(output_pdf, 'wb') as fh:
+        # create new file
+        with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
             pdf_writer.write(fh)
 
 def merge_pdfs(paths, new_name):
