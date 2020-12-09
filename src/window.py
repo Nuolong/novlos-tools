@@ -11,7 +11,7 @@ FILE_COUNT = 5
 actions = ["Encrypt", "Decrypt", "Merge", "Slice"]
 
 # widget lists
-ent_file_explorer = []
+lbl_file_explorer = []
 btn_actions = []
 
 # files
@@ -34,15 +34,15 @@ def choose_file(i):
                                              ("All files", "*.*")))
     # change label to match selected file
     file_paths[i] = filename
-    ent_file_explorer[i].configure(text = filename)
+    lbl_file_explorer[i].configure(text = filename)
 
 
 # determine action - currently working on prototypes
 def choose_action():
     if action_var.get() == 0:       # encrypt
-        pdf.add_encryption(file_paths, "abc123", "test")
+        pdf.add_encryption(file_paths, lbl_file_explorer, "abc123", "test")
     elif action_var.get() == 1:     # decrypt
-        pdf.rm_encryption(file_paths, "wrongpassword", "unlocked")
+        pdf.rm_encryption(file_paths, lbl_file_explorer, "wrongpassword", "unlocked")
     elif action_var.get() == 2:     # merge
         print("2")
     elif action_var.get() == 3:     # split
@@ -50,8 +50,8 @@ def choose_action():
 
 # create file inputs
 for i in range(FILE_COUNT):
-    ent_file_explorer.append(tk.Label(window,
-                                 width = 70,
+    lbl_file_explorer.append(tk.Label(window,
+                                 width = 75,
                                  fg = "blue"))
 
     chooseFile_arg = partial(choose_file, i)
@@ -59,7 +59,7 @@ for i in range(FILE_COUNT):
                             text = "Select File",
                             command = chooseFile_arg)
 
-    ent_file_explorer[i].grid(column = 0, row = i, columnspan = 4)
+    lbl_file_explorer[i].grid(column = 0, row = i, columnspan = 4)
     btn_explore.grid(column = 4, row = i)
 
 # create action buttons

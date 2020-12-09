@@ -5,7 +5,7 @@ import sys
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 # adds encryption to all PDFs in paths with passcode password & saves under new name
-def add_encryption(paths, password, new_name):
+def add_encryption(paths, lbl_file_explorer, password, new_name):
     pdf_writer = PdfFileWriter()
 
     for i, path in enumerate(paths):
@@ -17,7 +17,9 @@ def add_encryption(paths, password, new_name):
 
         # check if file is encrypted already
         if pdf_reader.isEncrypted:
-            print(f"Error: File ({path}) is already encrypted.")
+            error_msg = f"Error: File ({path}) is already encrypted."
+            print(error_msg)
+            lbl_file_explorer[i].configure(text = error_msg, fg = "red")
             continue
 
         # encrypt PDF
@@ -31,8 +33,11 @@ def add_encryption(paths, password, new_name):
         with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
             pdf_writer.write(fh)
 
+        # success message
+        lbl_file_explorer[i].configure(text = "Encrypted file \"" + new_name + "_" + str(i) + ".pdf\" created.", fg = "blue")
+
 # removes encryption from all PDFs in paths with password & saves undder new name
-def rm_encryption(paths, password, new_name):
+def rm_encryption(paths, lbl_file_explorer, password, new_name):
     pdf_writer = PdfFileWriter()
 
     for i, path in enumerate(paths):
@@ -43,7 +48,9 @@ def rm_encryption(paths, password, new_name):
         pdf_reader = PdfFileReader(path)
 
         if not pdf_reader.isEncrypted:
-            print(f"Error: File ({path}) is not encrypted.")
+            error_msg = f"Error: File ({path}) is not encrypted."
+            print(error_msg)
+            lbl_file_explorer[i].configure(text = error_msg, fg = "red")
             continue
 
         # decrypt with password (has silent failure)
@@ -53,13 +60,16 @@ def rm_encryption(paths, password, new_name):
             for page in range(pdf_reader.getNumPages()):
                 pdf_writer.addPage(pdf_reader.getPage(page))
         except: # still encrypted - most likely incorrect password provided
-            print(f"Error: Entered password could not unlock: ({path})")
+            error_msg = f"Error: Entered password could not unlock: ({path})"
+            print(error_msg)
+            lbl_file_explorer[i].configure(text = error_msg, fg = "blue")
 
         # create new file
         with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
             pdf_writer.write(fh)
+        lbl_file_explorer[i].configure(text = "Decrypted file \"" + new_name + "_" + str(i) + ".pdf\" created.", fg = "blue")
 
-def merge_pdfs(paths, new_name):
+def merge_pdfs(paths, lbl_file_explorer, new_name):
     pdf_writer = PdfFileWriter()
 
     for path in paths:
@@ -72,7 +82,7 @@ def merge_pdfs(paths, new_name):
     with open("merged.pdf", 'wb') as out:
         pdf_writer.write(out)
 
-def slice(paths, start, end, new_name):
+def slice(paths, lbl_file_explorer, start, end, new_name):
     pdf = PdfFileReader(path)
     for page in range(pdf.getNumPages()):
         pdf_writer = PdfFileWriter()
