@@ -42,7 +42,7 @@ def choose_file(i):
 # determine action - currently working on prototypes
 def choose_action():
     if action_var.get() == 0:       # encrypt
-        pdf.add_encryption(file_paths, lbl_file_explorer, "abc123", "test")
+        pdf.add_encryption(file_paths, lbl_file_explorer, "abc123", ent_file_names)
     elif action_var.get() == 1:     # decrypt
         pdf.rm_encryption(file_paths, lbl_file_explorer, "wrongpassword", "unlocked")
     elif action_var.get() == 2:     # merge

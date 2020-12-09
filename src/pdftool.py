@@ -6,13 +6,13 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 # adds encryption to all PDFs in paths with passcode password & saves under new name
 def add_encryption(paths, lbl_file_explorer, password, new_name):
-    pdf_writer = PdfFileWriter()
 
     for i, path in enumerate(paths):
         # empty
         if path == 0:
             continue
 
+        pdf_writer = PdfFileWriter()
         pdf_reader = PdfFileReader(path)
 
         # check if file is encrypted already
@@ -30,21 +30,21 @@ def add_encryption(paths, lbl_file_explorer, password, new_name):
                            use_128bit=True)
 
         # create new file
-        with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
+        with open(new_name[i].get(), 'wb') as fh:
             pdf_writer.write(fh)
 
         # success message
-        lbl_file_explorer[i].configure(text = "Encrypted file \"" + new_name + "_" + str(i) + ".pdf\" created.", fg = "blue")
+        lbl_file_explorer[i].configure(text = "Encrypted file \"" + new_name[i].get() + "\" created.", fg = "blue")
 
 # removes encryption from all PDFs in paths with password & saves undder new name
 def rm_encryption(paths, lbl_file_explorer, password, new_name):
-    pdf_writer = PdfFileWriter()
 
     for i, path in enumerate(paths):
         # empty
         if path == 0:
             continue
 
+        pdf_writer = PdfFileWriter()
         pdf_reader = PdfFileReader(path)
 
         if not pdf_reader.isEncrypted:
@@ -65,9 +65,9 @@ def rm_encryption(paths, lbl_file_explorer, password, new_name):
             lbl_file_explorer[i].configure(text = error_msg, fg = "blue")
 
         # create new file
-        with open(new_name + "_" + str(i) + ".pdf", 'wb') as fh:
+        with open(new_name[i].get(), 'wb') as fh:
             pdf_writer.write(fh)
-        lbl_file_explorer[i].configure(text = "Decrypted file \"" + new_name + "_" + str(i) + ".pdf\" created.", fg = "blue")
+        lbl_file_explorer[i].configure(text = "Decrypted file \"" + new_name[i].get() + "\" created.", fg = "blue")
 
 def merge_pdfs(paths, lbl_file_explorer, new_name):
     pdf_writer = PdfFileWriter()
